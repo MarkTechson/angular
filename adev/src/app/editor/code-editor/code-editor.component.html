@@ -71,6 +71,18 @@
     aria-label="Open current code in editor in an online editor"
     [cdkMenuTriggerFor]="launcherMenu"
   >
+  <docs-icon>
+    <button (click)="toggleAIOverlayPanel()" #trigger cdkOverlayOrigin>
+      <img src="assets/icons/ANG_Icon_AI.png" height="20.8">
+    </button>
+  </docs-icon>
+</button>
+  <button
+    class="adev-editor-download-button"
+    type="button"
+    (click)="openCurrentCodeInStackBlitz()"
+    aria-label="Open current code in editor in StackBlitz"
+  >
     <docs-icon>launch</docs-icon>
   </button>
   <!-- launcher dropdown window -->
@@ -94,6 +106,49 @@
     <docs-icon>download</docs-icon>
   </button>
 </div>
+<!-- ng-ai overlay content -->
+<ng-template
+  cdkConnectedOverlay
+  [cdkConnectedOverlayOrigin]="trigger"
+  [cdkConnectedOverlayOpen]="isOverlayOpen"
+  (detach)="disableAIOverlayPanel()"
+>
+  <article class="adev-editor-prompt-window">
+    <p class="heading">Hello Developer, what can we create today?</p>
+    <!-- TODO (marktechson): add analytics for clicking this link -->
+    <p>Gemini API Key (<a href="https://aistudio.google.com/app/apikey" target="_blank" rel="noopener noreferrer">Get a Gemini API  Key</a>) </p>
+    <!-- if there is an api key -->
+    <section class="model-config">
+      <input type="text" placeholder="Enter your API key" class="input-field" [(ngModel)]="apiKey">
+      <div class="adev-ai-model-select">
+        <label for="modelSelectionList"><p>Select a model</p></label>
+        <button [cdkMenuTriggerFor]="geminiModelMenu">
+          <span>{{selectedModel()}}</span>
+          <docs-icon>expand_more</docs-icon>
+        </button>
+      </div>
+    </section>
+    <!-- end api key and model selection -->
+    <label> 
+      <p class="prompt-suggestion">Enter a prompt...like build a new todo list</p>
+      <textarea class="prompt input-field" [(ngModel)]="prompt" placeholder="create a todo list component"></textarea>
+    </label>
+    <button (click)="submitPrompt()">Submit</button>@if(isGeneratingCode()){<span>Loading...</span>}
+    <p class="disclaimer">
+      Gemini API may display inaccurate information, including about people. It may also generate inaccuratecode so double-check its responses.
+      <a href="/learn-more-gen-ai">learn more.</a>
+    </p>
+  </article>
+</ng-template>
+
+<ng-template #geminiModelMenu>
+  <div class="adev-model-dropdown" id="modelSelectionList" cdkMenu>
+    <button cdkMenuItem (click)="selectedModel.set('gemini-1.5-flash')">gemini-1.5-flash</button>
+    <button cdkMenuItem (click)="selectedModel.set('gemini-1.5-pro')">gemini-1.5-pro</button>
+  </div>
+</ng-template>
+<!-- end ng-ai overlay content -->
+
 <!-- Code Editor -->
 <div #codeEditorWrapper class="adev-code-editor-wrapper"></div>
 

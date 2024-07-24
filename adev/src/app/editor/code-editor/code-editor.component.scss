@@ -217,3 +217,87 @@
     }
   }
 }
+.adev-editor-prompt-window {
+  background: var(--page-background);
+  border: 1px solid var(--senary-contrast);
+  border-radius: 0.25rem;
+  padding: 2rem;
+
+  .heading {
+    font-weight: bolder;
+    font-size: 1.5rem;
+  }
+  .disclaimer {
+    font-size: .5rem;
+  } 
+}
+
+.adev-ai-model-select {
+  margin-block-end: 0.5rem;
+
+  label {
+    display: block;
+    font-size: 0.875rem;
+  }
+
+  // cdk select button
+  button {
+    font-size: 0.875rem;
+    border: 1px solid var(--senary-contrast);
+    border-radius: 0.25rem;
+    width: 200px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding-block: 0.5rem;
+    font-weight: 400;
+    transition: border 0.3s ease;
+    span {
+      color: var(--primary-contrast);
+      transition: color 0.3s ease;
+      margin-inline-start: 0.1rem;
+    }
+
+    docs-icon {
+      font-size: 1.3rem;
+      color: var(--quaternary-contrast);
+      transition: color 0.3s ease;
+    }
+  }
+}
+.adev-editor-prompt-window {
+  .input-field {
+    font-size: 0.875rem;
+    border: 1px solid var(--senary-contrast);
+    border-radius: 0.25rem;
+    width: 100%;
+    padding-block: 0.5rem;
+    font-weight: 400;
+    padding: 0.5rem;
+  }
+}
+.adev-model-dropdown {
+  border: 1px solid var(--senary-contrast);
+  border-radius: 0.25rem;
+  padding: 0;
+  transform: translateY(-0.7rem);
+
+  button {
+    background: var(--page-background);
+    font-size: 0.875rem;
+    width: 100%;
+    text-align: left;
+    padding-block: 0.5rem;
+    color: var(--quaternary-contrast);
+    transition: color 0.3s ease, background 0.3s ease;
+    font-weight: 400;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+
+    &:hover {
+      background: var(--senary-contrast);
+      color: var(--primary-contrast);
+    }
+  }
+}

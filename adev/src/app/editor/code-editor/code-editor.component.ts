@@ -6,7 +6,7 @@
  * found in the LICENSE file at https://angular.dev/license
  */
 
-import {Location} from '@angular/common';
+import {Location, NgFor, NgIf} from '@angular/common';
 import {
   AfterViewInit,
   ChangeDetectionStrategy,
@@ -31,8 +31,12 @@ import {DiagnosticWithLocation, DiagnosticsState} from './services/diagnostics-s
 import {DownloadManager} from '../download-manager.service';
 import {StackBlitzOpener} from '../stackblitz-opener.service';
 import {ClickOutside, IconComponent} from '@angular/docs';
-import {CdkMenu, CdkMenuItem, CdkMenuTrigger} from '@angular/cdk/menu';
 import {IDXLauncher} from '../idx-launcher.service';
+import {Dialog, DialogRef, DIALOG_DATA, DialogModule} from '@angular/cdk/dialog';
+import {OverlayModule, CdkConnectedOverlay} from '@angular/cdk/overlay';
+import {CdkMenu, CdkMenuItem, CdkMenuTrigger} from '@angular/cdk/menu';
+import {FormsModule} from '@angular/forms';
+import {CodeGeneratorService} from './services/code-generator.service';
 
 export const REQUIRED_FILES = new Set([
   'src/main.ts',
@@ -48,7 +52,22 @@ const ANGULAR_DEV = 'https://angular.dev';
   templateUrl: './code-editor.component.html',
   styleUrls: ['./code-editor.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
-  imports: [MatTabsModule, IconComponent, ClickOutside, CdkMenu, CdkMenuItem, CdkMenuTrigger],
+  imports: [
+    NgIf,
+    NgFor,
+    MatTabsModule,
+    IconComponent,
+    ClickOutside,
+    CdkMenu,
+    CdkMenuItem,
+    CdkMenuTrigger,
+    OverlayModule,
+    OverlayModule,
+    CdkMenu,
+    CdkMenuItem,
+    CdkMenuTrigger,
+    FormsModule,
+  ],
 })
 export class CodeEditor implements AfterViewInit, OnDestroy {
   @ViewChild('codeEditorWrapper') private codeEditorWrapperRef!: ElementRef<HTMLDivElement>;
@@ -84,6 +103,12 @@ export class CodeEditor implements AfterViewInit, OnDestroy {
   private readonly title = inject(Title);
   private readonly location = inject(Location);
   private readonly embeddedTutorialManager = inject(EmbeddedTutorialManager);
+  private readonly codeGenService = inject(CodeGeneratorService);
+  protected isOverlayOpen = false;
+  protected readonly apiKey = signal('AIzaSyBrA6Ebl9t72IRbDkdHNVSbeWF4ZBqksCA');
+  protected readonly selectedModel = signal('');
+  protected readonly prompt = signal('');
+  protected readonly isGeneratingCode = signal(false);
 
   private readonly errors$ = this.diagnosticsState.diagnostics$.pipe(
     // Display errors one second after code update
@@ -246,5 +271,55 @@ export class CodeEditor implements AfterViewInit, OnDestroy {
           this.codeMirrorEditor.changeCurrentFile(selectedFile.filename);
         }
       });
+  }
+
+  toggleAIOverlayPanel() {
+    this.isOverlayOpen = !this.isOverlayOpen;
+  }
+  disableAIOverlayPanel() {
+    this.isOverlayOpen = false;
+  }
+
+  async submitPrompt(): Promise<void> {
+    /*
+      TODO (marktechson): convert this entire section to form validation
+    */
+
+    if (!this.prompt()) {
+      /*
+        TODO (marktechson): display an error "Please enter a valid prompt"
+      */
+      return;
+    }
+
+    let useBrowserModel = false;
+
+    if (!this.apiKey()) {
+      useBrowserModel = true;
+    } else {
+      if (!this.selectedModel()) {
+        /*
+          TODO (marktechson): display an error "Please select a model or don't provide an API key"
+        */
+        return;
+      }
+    }
+    this.isGeneratingCode.set(true);
+    const generatedCode = await this.codeGenService.generatateCode(
+      this.apiKey(),
+      this.selectedModel(),
+      this.prompt(),
+      useBrowserModel,
+    );
+
+    // Create the new files
+    for (let i = 0; i < generatedCode.length; i++) {
+      const file = generatedCode[i];
+      await this.codeMirrorEditor.createFile(file['name'], file['code']);
+    }
+    this.codeMirrorEditor.changeProject();
+
+    this.isGeneratingCode.set(false);
+    this.toggleAIOverlayPanel();
   }
 }

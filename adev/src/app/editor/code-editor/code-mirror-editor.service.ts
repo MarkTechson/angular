@@ -253,6 +253,13 @@ export class CodeMirrorEditor {
     });
   }
 
+  public updateVfsEnvForUpdate(): void {
+    this.sendRequestToTsVfs<Map<string, string>>({
+      action: TsVfsWorkerActions.UPDATE_VFS_ENV_REQUEST,
+      data: this.getVfsEnvFileSystemMap(),
+    });
+  }
+
   private listenToProjectChanges() {
     this.tutorialChangeListener$ = this.embeddedTutorialManager.tutorialChanged$
       .pipe(
@@ -265,7 +272,7 @@ export class CodeMirrorEditor {
       });
   }
 
-  private changeProject() {
+  changeProject() {
     this.setProjectFiles();
 
     this._editorStates.clear();
@@ -285,7 +292,17 @@ export class CodeMirrorEditor {
       const openFile = tutorialFiles.find(({filename}) => filename === openFileName);
 
       if (openFile) {
-        openFiles.push(openFile);
+        const existingFileIndex = openFiles.findIndex(
+          (file) => file.filename === openFile.filename,
+        );
+
+        if (existingFileIndex !== -1) {
+          // File already exists, overwrite it
+          openFiles[existingFileIndex] = openFile;
+        } else {
+          // New file, add it to the array
+          openFiles.push(openFile);
+        }
       }
     }
 
@@ -314,20 +331,28 @@ export class CodeMirrorEditor {
     this.saveLibrariesTypes();
   }
 
-  async createFile(filename: string) {
+  async createFile(filename: string, fileContent?: string) {
+    let content = '';
+
     // if file already exists, use its content
-    const content = await this.nodeRuntimeSandbox.readFile(filename).catch((error) => {
+    content = await this.nodeRuntimeSandbox.readFile(filename).catch((error) => {
       // empty content if file does not exist
       if (error.message.includes('ENOENT')) return '';
       else throw error;
     });
 
+    if (fileContent) {
+      content = fileContent;
+    }
+
     await this.nodeRuntimeSandbox.writeFile(filename, content);
 
-    this.embeddedTutorialManager.tutorialFiles.update((files) => ({
-      ...files,
-      [filename]: content,
-    }));
+    this.embeddedTutorialManager.tutorialFiles.update((files) => {
+      return {
+        ...files,
+        [filename]: content,
+      };
+    });
 
     this.embeddedTutorialManager.openFiles.update((files) => [...files, filename]);
 
