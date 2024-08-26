@@ -88,6 +88,7 @@ APPLICATION_DEPS = [
     "@npm//@xterm/addon-fit",
     "@npm//algoliasearch",
     "@npm//angular-split",
+    "@npm//@google/generative-ai",
     "@npm//zone.js",
 ]
 

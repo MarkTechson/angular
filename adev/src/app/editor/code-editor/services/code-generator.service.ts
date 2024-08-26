@@ -142,11 +142,6 @@ The output will be a json structure that maps to the following schema:
       }
     }
 
-    // await this.nodeRuntimeSandbox.deleteFile('src/main.ts');
-    //await this.codeMirror.deleteFile('src/main.ts');
-    // await this.nodeRuntimeSandbox.writeFile('src/main.ts', code);
-    // await this.codeMirror.updateVfsEnvForUpdate();
-    // console.log(code);
     return code;
   }
 

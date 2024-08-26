@@ -105,7 +105,7 @@ export class CodeEditor implements AfterViewInit, OnDestroy {
   private readonly embeddedTutorialManager = inject(EmbeddedTutorialManager);
   private readonly codeGenService = inject(CodeGeneratorService);
   protected isOverlayOpen = false;
-  protected readonly apiKey = signal('AIzaSyBrA6Ebl9t72IRbDkdHNVSbeWF4ZBqksCA');
+  protected readonly apiKey = signal('');
   protected readonly selectedModel = signal('');
   protected readonly prompt = signal('');
   protected readonly isGeneratingCode = signal(false);

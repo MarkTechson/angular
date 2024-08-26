@@ -68,20 +68,20 @@
   <button
     class="adev-editor-download-button"
     type="button"
-    aria-label="Open current code in editor in an online editor"
-    [cdkMenuTriggerFor]="launcherMenu"
+    aria-label="Open code generation options"
   >
-  <docs-icon>
-    <button (click)="toggleAIOverlayPanel()" #trigger cdkOverlayOrigin>
-      <img src="assets/icons/ANG_Icon_AI.png" height="20.8">
-    </button>
-  </docs-icon>
-</button>
+    <docs-icon>
+      <button (click)="toggleAIOverlayPanel()" #trigger cdkOverlayOrigin>
+        <img src="assets/icons/ANG_Icon_AI.png" height="20.8">
+      </button>
+    </docs-icon>
+  </button>
+
   <button
     class="adev-editor-download-button"
     type="button"
-    (click)="openCurrentCodeInStackBlitz()"
-    aria-label="Open current code in editor in StackBlitz"
+    aria-label="Open current code in editor in an online editor"
+    [cdkMenuTriggerFor]="launcherMenu"
   >
     <docs-icon>launch</docs-icon>
   </button>
@@ -115,9 +115,7 @@
 >
   <article class="adev-editor-prompt-window">
     <p class="heading">Hello Developer, what can we create today?</p>
-    <!-- TODO (marktechson): add analytics for clicking this link -->
     <p>Gemini API Key (<a href="https://aistudio.google.com/app/apikey" target="_blank" rel="noopener noreferrer">Get a Gemini API  Key</a>) </p>
-    <!-- if there is an api key -->
     <section class="model-config">
       <input type="text" placeholder="Enter your API key" class="input-field" [(ngModel)]="apiKey">
       <div class="adev-ai-model-select">
@@ -128,7 +126,6 @@
         </button>
       </div>
     </section>
-    <!-- end api key and model selection -->
     <label> 
       <p class="prompt-suggestion">Enter a prompt...like build a new todo list</p>
       <textarea class="prompt input-field" [(ngModel)]="prompt" placeholder="create a todo list component"></textarea>
