@@ -64,6 +64,7 @@ export class Navigation implements OnInit {
   readonly PLAYGROUND_ROUTE = PagePrefix.PLAYGROUND;
   readonly REFERENCE_ROUTE = PagePrefix.REFERENCE;
   readonly TUTORIALS_ROUTE = PagePrefix.TUTORIALS;
+  readonly NG_AI_ROUTE = PagePrefix.NG_AI;
 
   readonly GITHUB = GITHUB;
   readonly X = X;
@@ -194,7 +195,9 @@ export class Navigation implements OnInit {
     ) {
       this.activeRouteItem.set(PagePrefix.REFERENCE);
     } else if (urlAfterRedirects === PagePrefix.PLAYGROUND) {
-      this.activeRouteItem.set(PagePrefix.PLAYGROUND);
+      this.activeRouteItem.set(PagePrefix.NG_AI);
+    } else if (urlAfterRedirects === PagePrefix.NG_AI) {
+      this.activeRouteItem.set(PagePrefix.NG_AI);
     } else if (urlAfterRedirects.startsWith(PagePrefix.TUTORIALS)) {
       this.activeRouteItem.set(PagePrefix.TUTORIALS);
     } else if (DOCS_ROUTES.some((route) => route.path === urlAfterRedirects)) {

@@ -199,6 +199,11 @@ export const routes: Route[] = [
         loadComponent: () => import('./features/playground/playground.component'),
         data: {...commonTutorialRouteData, label: 'Playground'},
       },
+      {
+        path: PagePrefix.NG_AI,
+        loadComponent: () => import('./features/ng-ai/ng-ai.component'),
+        data: {...commonTutorialRouteData, label: 'ng-ai ✨'},
+      },
       ...SUB_NAVIGATION_ROUTES,
       ...API_REFERENCE_ROUTES,
       ...FOOTER_ROUTES,
