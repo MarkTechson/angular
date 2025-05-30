@@ -611,9 +611,14 @@ const DOCS_SUB_NAVIGATION_DATA: NavigationItem[] = [
       {
         label: 'Get Started',
         path: 'ai',
-        contentPath: 'ai/overview'
-      }
-    ]
+        contentPath: 'ai/overview',
+      },
+      {
+        label: 'Using AI for Development',
+        path: 'ai/develop-with-ai',
+        contentPath: 'ai/develop-with-ai',
+      },
+    ],
   },
   {
     label: 'Developer Tools',
