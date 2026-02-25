@@ -9,7 +9,6 @@ Use the `@Component` decorator to define a component's metadata.
 ```angular-ts
 @Component({
   selector: 'app-profile',
-  standalone: true,
   template: `
     <img src="profile.jpg" alt="Profile photo" />
     <button (click)="save()">Save</button>
@@ -39,7 +38,6 @@ To use a component, add it to the `imports` array of the consuming component and
 ```angular-ts
 @Component({
   selector: 'app-root',
-  standalone: true,
   imports: [ProfileComponent],
   template: `<app-profile />`,
 })
